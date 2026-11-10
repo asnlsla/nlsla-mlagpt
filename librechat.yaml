@@ -125,7 +125,7 @@ interface:
   # organization's policies before you let anyone log in. See
   # docs/modules/branding.md. Shipping someone else's terms of service is worse
   # than shipping none.
-  customWelcome: "Welcome to NLSLA MLAGPT Pilot. Testing only. Do not enter client, confidential, personal, or protected information."
+  customWelcome: "Welcome to NLSGPT - NLSLA's internal AI assistant. This pilot is limited to authorized users. Do not upload confidential client or protected information until approved."
 
 # =============================================================================
 # Registration
