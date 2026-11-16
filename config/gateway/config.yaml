@@ -1,0 +1,30 @@
+{
+  "model_list": [
+    {
+      "model_name": "gpt-6-luna",
+      "litellm_params": {
+        "model": "azure/gpt-6-luna",
+        "api_base": "https://openai-nlsgpt-pilot.openai.azure.com/",
+        "api_version": "2025-04-01-preview",
+        "store": false
+      }
+    },
+    {
+      "model_name": "gpt-6-sol",
+      "litellm_params": {
+        "model": "azure/gpt-6-sol",
+        "api_base": "https://openai-nlsgpt-pilot.openai.azure.com/",
+        "api_version": "2025-04-01-preview",
+        "store": false
+      }
+    }
+  ],
+  "litellm_settings": {
+    "enable_azure_ad_token_refresh": true,
+    "success_callback": [],
+    "failure_callback": []
+  },
+  "general_settings": {
+    "master_key": "os.environ/LITELLM_MASTER_KEY"
+  }
+}

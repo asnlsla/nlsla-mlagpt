@@ -1,0 +1,43 @@
+{
+  "services": {
+    "gateway": {
+      "image": "ghcr.io/berriai/litellm@sha256:11175975a3093e05e92faee2fe2fe3412a3ae2fcaa849eb0fe25d5f0d8bcb2e9",
+      "container_name": "nlsgpt-gateway",
+      "restart": "unless-stopped",
+      "env_file": [
+        "/srv/librechat/gateway/gateway.env"
+      ],
+      "volumes": [
+        "/srv/librechat/app/config/gateway/config.yaml:/app/config.yaml:ro"
+      ],
+      "command": [
+        "--config",
+        "/app/config.yaml",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "4000"
+      ],
+      "networks": {
+        "librechat": {
+          "aliases": [
+            "nlsgpt-gateway"
+          ]
+        }
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    }
+  },
+  "networks": {
+    "librechat": {
+      "external": true,
+      "name": "librechat_default"
+    }
+  }
+}

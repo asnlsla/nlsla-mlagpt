@@ -23,7 +23,6 @@
 # =============================================================================
 
 name: librechat
-
 # Docker's json-file driver does not rotate unless limits are set explicitly.
 # Keep enough recent output for troubleshooting without allowing a noisy
 # dependency (MongoDB connection logs were the first offender) to fill the OS
@@ -33,9 +32,7 @@ x-default-logging: &default-logging
   options:
     max-size: "10m"
     max-file: "5"
-
 services:
-
   # ---------------------------------------------------------------------------
   # Caddy — the only internet-facing service.
   # ---------------------------------------------------------------------------
@@ -80,7 +77,6 @@ services:
     depends_on:
       - api
       - admin-panel
-
   # ---------------------------------------------------------------------------
   # LibreChat itself.
   # ---------------------------------------------------------------------------
@@ -102,7 +98,7 @@ services:
     logging: *default-logging
     ports:
       - "127.0.0.1:3080:3080"
-    env_file: .env
+    env_file: [".env", "/srv/librechat/gateway/gateway.env"]
     environment:
       HOST: 0.0.0.0
       MONGO_URI: mongodb://mongodb:27017/LibreChat
@@ -163,7 +159,6 @@ services:
       timeout: 5s
       start_period: 120s
       retries: 3
-
   # ---------------------------------------------------------------------------
   # Admin Panel — shipped as its own image since v0.8.7, not baked into the app.
   # ---------------------------------------------------------------------------
@@ -198,7 +193,6 @@ services:
       SESSION_COOKIE_SECURE: ${ADMIN_PANEL_SESSION_COOKIE_SECURE:-true}
     depends_on:
       - api
-
   # ---------------------------------------------------------------------------
   # Data stores.
   # ---------------------------------------------------------------------------
@@ -229,7 +223,6 @@ services:
       timeout: 5s
       start_period: 30s
       retries: 5
-
   meilisearch:
     image: getmeili/meilisearch:v1.35.1
     container_name: chat-meilisearch
@@ -247,7 +240,6 @@ services:
       # does not understand. The index is derived data; losing it costs a
       # reindex, not a restore.
       - ${DATA_DIR}/meili_data_v1.35.1:/meili_data
-
   vectordb:
     image: pgvector/pgvector:0.8.0-pg15-trixie
     container_name: vectordb
@@ -265,7 +257,6 @@ services:
       timeout: 5s
       start_period: 30s
       retries: 5
-
   # File chat / RAG. Embeds uploaded documents into vectordb.
   #
   # EMBEDDINGS_MODEL comes from .env and is FROZEN — changing it invalidates
@@ -290,7 +281,6 @@ services:
     depends_on:
       vectordb:
         condition: service_healthy
-
   # ---------------------------------------------------------------------------
   # MCP tool servers — optional, one Compose profile each.
   # ---------------------------------------------------------------------------
@@ -320,7 +310,6 @@ services:
       timeout: 5s
       start_period: 15s
       retries: 3
-
   letterwriter-mcp:
     image: ghcr.io/marylandlegalaid/letterwriter-mcp:v1.1.1@sha256:77f21ca8ee406930c06200bc2728534ad2932123bec6f837ab6bbe27213ad25d
     container_name: letterwriter-mcp
