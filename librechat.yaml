@@ -124,6 +124,7 @@ interface:
   # than shipping none.
   customWelcome: "Welcome to NLSGPT - NLSLA's internal AI assistant. This pilot is limited to authorized users. Do not upload confidential client or protected information until approved."
   webSearch: false
+  sharedLinks: false
 # =============================================================================
 # Registration
 # =============================================================================
