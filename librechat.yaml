@@ -202,26 +202,6 @@ endpoints:
     allowedProviders:
       - azureOpenAI
   # ---------------------------------------------------------------------------
-  # The built-in openAI endpoint: GPT-6. The models are OPENAI_MODELS in
-  # env.defaults.
-  # ---------------------------------------------------------------------------
-  # Tool use on these models needs the Responses API. v0.8.8 routes every GPT-6
-  # model there on its own whenever useResponsesApi is unset
-  # (packages/api/src/endpoints/openai/llm.ts, `prefersResponsesApiByModel`).
-  # Re-check that rule at every LibreChat upgrade. What it does not cover: a
-  # conversation, preset or agent that stores useResponsesApi: false keeps Chat
-  # Completions, and tools then fail for that user. The built-in endpoint takes
-  # no addParams, so nothing here can force it. The model migrations clear
-  # stored `false` values, and validate-config.sh keeps OPENAI_MODELS to GPT-6.
-  # Full story: docs/modules/models-gpt56-responses.md
-  openAI:
-    # titleConvo MUST stay true. Agent conversations get no title at all when
-    # it is false (api/server/services/Endpoints/agents/title.js returns early,
-    # with no fallback), while direct chats keep titling, so a smoke test of
-    # direct chats does not catch it. validate-config.sh asserts it.
-    titleConvo: true
-    titleModel: "gpt-6-luna"
-  # ---------------------------------------------------------------------------
   # RETIRED: the custom "OpenAI GPT-5.6 Responses" endpoint.
   # ---------------------------------------------------------------------------
   # It existed because v0.8.7 sent GPT-5.6 to Chat Completions, where reasoning
@@ -239,7 +219,7 @@ endpoints:
   #
   # The admin panel's DB override (configs, role __base__) carries a copy of this
   # definition too. Step B removes it there as well.
-  custom: [{"name": "OpenAI GPT-5.6 Responses", "apiKey": "${OPENAI_API_KEY}", "baseURL": "https://api.openai.com/v1", "models": {"default": ["gpt-5.6-luna", "gpt-5.6-terra", "gpt-5.6-sol"], "fetch": false}, "titleConvo": true, "titleModel": "gpt-5.6-luna", "summarize": false, "modelDisplayLabel": "OpenAI", "addParams": {"useResponsesApi": true}}, {"name": "NLSGPT Private Azure", "apiKey": "${LITELLM_MASTER_KEY}", "baseURL": "http://nlsgpt-gateway:4000/v1", "models": {"default": ["gpt-6-luna", "gpt-6-sol"], "fetch": false}, "titleConvo": true, "titleModel": "gpt-6-luna", "summarize": false, "modelDisplayLabel": "NLSGPT", "addParams": {"useResponsesApi": true, "store": false}}]
+  custom: [{"name": "NLSGPT Private Azure", "apiKey": "${LITELLM_MASTER_KEY}", "baseURL": "http://nlsgpt-gateway:4000/v1", "models": {"default": ["gpt-6-luna", "gpt-6-sol"], "fetch": false}, "titleConvo": true, "titleModel": "gpt-6-luna", "summarize": false, "modelDisplayLabel": "NLSGPT", "addParams": {"useResponsesApi": true, "store": false}}]
 # =============================================================================
 # Model specs
 # =============================================================================
