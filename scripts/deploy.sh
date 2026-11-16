@@ -337,6 +337,13 @@ bring_up_stack() {
 
   api_after="$(docker compose "${compose_args[@]}" ps -q api 2>/dev/null || true)"
 
+
+  # Start the private Azure gateway as its own Compose project.
+  if ! docker compose -p nlsgpt-gateway -f "$REPO_ROOT/compose.gateway.yml" up -d; then
+    fail "failed to start the private Azure gateway"
+    return 1
+  fi
+
   # --- 7b. Make a config-only change actually take effect --------------------
   # LibreChat parses librechat.yaml once, at startup. The merged file is a BIND
   # MOUNT, so rewriting its contents does not change the container's definition —

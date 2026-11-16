@@ -32,10 +32,8 @@
 # librechat.example.yaml against this file; renamed and removed keys are the most
 # common upgrade break and prose changelogs miss them.
 version: 1.3.17
-
 # Caches the parsed config for faster loading across the app lifecycle.
 cache: true
-
 # Requires a valid session to fetch anything under /images/.
 #
 # LEAVING THIS UNSET IS NOT A NEUTRAL DEFAULT — IT SERVES THE DATA DISK TO THE
@@ -71,7 +69,6 @@ cache: true
 # The uploads half — PDFs, .docx, spreadsheets — was never affected: those are
 # served by /api/files, which sits behind requireJwtAuth.
 secureImageLinks: true
-
 # =============================================================================
 # Interface
 # =============================================================================
@@ -126,7 +123,6 @@ interface:
   # docs/modules/branding.md. Shipping someone else's terms of service is worse
   # than shipping none.
   customWelcome: "Welcome to NLSGPT - NLSLA's internal AI assistant. This pilot is limited to authorized users. Do not upload confidential client or protected information until approved."
-
 # =============================================================================
 # Registration
 # =============================================================================
@@ -136,7 +132,6 @@ interface:
 # provider here does not enable it; the corresponding environment variables do.
 registration:
   socialLogins: ['openid']
-
   # ⚠️  GRANTEES: uncomment this and put YOUR email domains here before you let
   # anyone reach the login page.
   #
@@ -152,7 +147,6 @@ registration:
   # Maryland Legal Aid does not set this because it sets ALLOW_REGISTRATION=false
   # and creates accounts through Entra ID single sign-on instead. Either approach
   # closes the hole; doing neither does not.
-
 # =============================================================================
 # Endpoints
 # =============================================================================
@@ -202,13 +196,11 @@ endpoints:
       allowedEnvironments: ["user", "agent-user", "conversation"]
       principalWorkers:
         enabled: false
-
     # The providers the Agent Builder offers, and the only ones an agent may
     # use. An explicit allowlist rather than the default (every endpoint): it
     # is what keeps the retired custom endpoint below out of the Builder.
     allowedProviders:
       - azureOpenAI
-
   # ---------------------------------------------------------------------------
   # The built-in openAI endpoint: GPT-6. The models are OPENAI_MODELS in
   # env.defaults.
@@ -229,7 +221,6 @@ endpoints:
     # direct chats does not catch it. validate-config.sh asserts it.
     titleConvo: true
     titleModel: "gpt-6-luna"
-
   # ---------------------------------------------------------------------------
   # RETIRED: the custom "OpenAI GPT-5.6 Responses" endpoint.
   # ---------------------------------------------------------------------------
@@ -248,36 +239,7 @@ endpoints:
   #
   # The admin panel's DB override (configs, role __base__) carries a copy of this
   # definition too. Step B removes it there as well.
-  custom:
-    - name: "OpenAI GPT-5.6 Responses"
-      apiKey: "${OPENAI_API_KEY}"
-      baseURL: "https://api.openai.com/v1"
-      models:
-        default:
-          - "gpt-5.6-luna"
-          - "gpt-5.6-terra"
-          - "gpt-5.6-sol"
-        fetch: false
-      # titleConvo MUST stay true. It was false until 2026-07-30, copied from the
-      # Render config where it was harmless because no agent pointed at this
-      # endpoint. Once §11.3 moved agents here it stopped being harmless:
-      # api/server/services/Endpoints/agents/title.js early-returns on
-      # `client.options.titleConvo === false`, with no fallback to titleModel and
-      # no delegation elsewhere, so every conversation on every migrated agent was
-      # silently saved as "New Chat". Upstream's own test asserts this behaviour
-      # ("skips generation when the endpoint disables titleConvo").
-      #
-      # Note the asymmetry that made it hard to spot: DIRECT chats on this
-      # endpoint titled correctly throughout — the non-agent path does not consult
-      # this flag. Only agents were affected, which is why the smoke test's model
-      # checks all passed while 15 of 24 agents quietly lost their titles.
-      titleConvo: true
-      titleModel: "gpt-5.6-luna"
-      summarize: false
-      modelDisplayLabel: "OpenAI"
-      addParams:
-        useResponsesApi: true
-
+  custom: [{"name": "OpenAI GPT-5.6 Responses", "apiKey": "${OPENAI_API_KEY}", "baseURL": "https://api.openai.com/v1", "models": {"default": ["gpt-5.6-luna", "gpt-5.6-terra", "gpt-5.6-sol"], "fetch": false}, "titleConvo": true, "titleModel": "gpt-5.6-luna", "summarize": false, "modelDisplayLabel": "OpenAI", "addParams": {"useResponsesApi": true}}, {"name": "NLSGPT Private Azure", "apiKey": "${LITELLM_MASTER_KEY}", "baseURL": "http://nlsgpt-gateway:4000/v1", "models": {"default": ["gpt-6-luna", "gpt-6-sol"], "fetch": false}, "titleConvo": true, "titleModel": "gpt-6-luna", "summarize": false, "modelDisplayLabel": "NLSGPT", "addParams": {"useResponsesApi": true, "store": false}}]
 # =============================================================================
 # Model specs
 # =============================================================================
@@ -334,22 +296,7 @@ endpoints:
 modelSpecs:
   addedEndpoints:
     - azureOpenAI
-  list:
-    - name: "quick"
-      label: "Quick"
-      description: "Fast, cost-effective everyday assistance."
-      preset:
-        endpoint: "azureOpenAI"
-        model: "gpt-4o-mini"
-        maxContextTokens: 100000
-    - name: "standard"
-      label: "Standard"
-      description: "General analysis, drafting, and research assistance."
-      default: true
-      preset:
-        endpoint: "azureOpenAI"
-        model: "gpt-4o"
-        maxContextTokens: 100000
+  list: [{"name": "quick", "label": "Quick", "description": "Fast, cost-effective everyday assistance.", "preset": {"endpoint": "NLSGPT Private Azure", "model": "gpt-6-luna", "maxContextTokens": 100000, "useResponsesApi": true}}, {"name": "standard", "label": "Standard", "description": "General analysis, drafting, and research assistance.", "default": true, "preset": {"endpoint": "NLSGPT Private Azure", "model": "gpt-6-sol", "maxContextTokens": 100000, "useResponsesApi": true}}, {"name": "quick-legacy", "label": "Quick — Legacy", "description": "Fast, cost-effective everyday assistance.", "preset": {"endpoint": "azureOpenAI", "model": "gpt-4o-mini", "maxContextTokens": 100000}, "default": false}, {"name": "standard-legacy", "label": "Standard — Legacy", "description": "General analysis, drafting, and research assistance.", "default": false, "preset": {"endpoint": "azureOpenAI", "model": "gpt-4o", "maxContextTokens": 100000}}]
 # =============================================================================
 # Speech to text
 # =============================================================================
@@ -431,7 +378,6 @@ memory:
     enabled: false
     provider: "azureOpenAI"
     model: "gpt-4o-mini"
-
 # =============================================================================
 # Summarization (UPGRADE_PLAN M8, M16)
 # =============================================================================
@@ -463,7 +409,6 @@ summarization:
   model: "gpt-4o-mini"
   retainRecent:
     turns: 2
-
 # =============================================================================
 # Web search
 # =============================================================================
