@@ -123,6 +123,7 @@ interface:
   # docs/modules/branding.md. Shipping someone else's terms of service is worse
   # than shipping none.
   customWelcome: "Welcome to NLSGPT - NLSLA's internal AI assistant. This pilot is limited to authorized users. Do not upload confidential client or protected information until approved."
+  webSearch: false
 # =============================================================================
 # Registration
 # =============================================================================
@@ -174,7 +175,6 @@ endpoints:
       - "deferred_tools"
       - "execute_code"
       - "file_search"
-      - "web_search"
       - "artifacts"
       - "subagents"
       - "actions"
