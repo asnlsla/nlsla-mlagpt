@@ -356,8 +356,11 @@ memory:
   tokenLimit: 3000
   agent:
     enabled: false
-    provider: "azureOpenAI"
-    model: "gpt-4o-mini"
+    provider: "NLSGPT Private Azure"
+    model: "gpt-6-luna"
+    model_parameters:
+      useResponsesApi: true
+      store: false
 # =============================================================================
 # Summarization (UPGRADE_PLAN M8, M16)
 # =============================================================================
