@@ -17,6 +17,17 @@
         "api_version": "2025-04-01-preview",
         "store": false
       }
+    },
+    {
+      "model_name": "text-embedding-3-small-prod",
+      "litellm_params": {
+        "model": "azure/text-embedding-3-small-prod",
+        "api_base": "https://openai-nlsgpt-pilot.openai.azure.com/",
+        "api_version": "2024-10-21"
+      },
+      "model_info": {
+        "mode": "embedding"
+      }
     }
   ],
   "litellm_settings": {

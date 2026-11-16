@@ -296,6 +296,12 @@ bring_up_stack() {
   fi
 
   # --- 6 & 7. Pull and start ------------------------------------------------
+
+  # Load the existing host-only gateway credential for Compose interpolation.
+  . "/srv/librechat/gateway/gateway.env"
+  export LITELLM_MASTER_KEY
+  : "${LITELLM_MASTER_KEY:?Internal gateway key required}"
+
   local -a compose_args=(-f compose.yaml -f "$storage_compose")
   local security_overlay
   if ! security_overlay="$("$REPO_ROOT/scripts/security-overlay.sh" "$REPO_ROOT")"; then
